@@ -15,4 +15,4 @@ to apply such methods and you just have to set the required parameters.
 It also computes confidence intervals for the final results and present
 them in a organized way.
 
-Different from the [examples module](https://github.com/cloudsimplus-examples) that aims just to show how to use CloudSim Plus features, this module includes more complex simulation scenarios concerned in providing scientifically valid results.
+Different from the [examples module](https://github.com/cloudsimplus/cloudsimplus-examples) that aims just to show how to use CloudSim Plus features, this module includes more complex simulation scenarios concerned in providing scientifically valid results.
