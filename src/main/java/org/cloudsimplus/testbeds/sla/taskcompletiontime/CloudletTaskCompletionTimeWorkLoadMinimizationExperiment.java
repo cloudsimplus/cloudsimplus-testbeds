@@ -118,7 +118,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         finishedCloudlets.sort(comparingLong(Cloudlet::getId));
 
         new CloudletsTableBuilder(finishedCloudlets)
-            .addColumn(7, new TextTableColumn("VM    ", "MIPS  "), c -> (long)c.getVm().getMips())
+            .addColumn(new TextTableColumn("VM    ", "MIPS  "), c -> (long)c.getVm().getMips(), 7)
             .addColumn(new TextTableColumn("Wait Time", "Seconds"), c -> Math.ceil(c.getWaitingTime()))
             .build();
     }
