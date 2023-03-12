@@ -70,8 +70,8 @@ import static org.cloudsimplus.testbeds.hostfaultinjection.HostFaultInjectionRun
  * linked to {@link DatacenterBroker} when all VMs associated with that broker are destroyed.
  * This way, new VMs are created for fault recovery.
  *
- * The experiment assesses if the SLA contract of the customer (represented by a {@link DatacenterBroker}
- * is being met or not.
+ * <p>The experiment assesses if the SLA contract of the customer (represented by a {@link DatacenterBroker}
+ * is being met or not.</p>
  *
  * <p>For more details, check
  * <a href="http://www.di.ubi.pt/~mario/files/MScDissertation-RaysaOliveira.pdf">Raysa Oliveira's Master Thesis (only in Portuguese)</a>.</p>
@@ -82,7 +82,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /**
      * The list of SLA Contracts in JSON format which are used to assess
      * if the metrics in those contracts are being met.
-     * This file is stored into the resources directory.
+     * This file is stored into the resources' directory.
      */
     private static final String SLA_CONTRACTS_LIST = "sla-files.txt";
 
@@ -233,9 +233,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
      * computes the new k-fault-tolerance level which is possible using such a VM.
      * That is, computes the k number of VMs which can be created
      * from that template, that will not exceed the total price the customer
-     * is willing to pay.
-     *
-     * At the end, updates the customer contract.
+     * is willing to pay. At the end, updates the customer contract.
      *
      * @param broker the broker representing a customer to get the cheapest {@link AwsEc2Template}
      *               which maximizes the number of VMs for the customer's expected price
