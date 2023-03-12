@@ -46,6 +46,9 @@ import java.util.List;
 import static java.util.Comparator.comparingDouble;
 import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompletionTimeWorkLoadWithoutMinimizationRunner.VMS;
 
+/**
+ * @param <T> the type of the subclass extending this class
+ */
 abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment<T>> extends Experiment<T> {
     private static final int HOSTS = 50;
     private static final int HOST_PES = 32;
