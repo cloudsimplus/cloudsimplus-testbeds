@@ -78,7 +78,7 @@ import static org.cloudsimplus.testbeds.hostfaultinjection.HostFaultInjectionRun
  *
  * @author raysaoliveira
  */
-final class HostFaultInjectionExperiment extends Experiment {
+final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionExperiment> {
     /**
      * The list of SLA Contracts in JSON format which are used to assess
      * if the metrics in those contracts are being met.

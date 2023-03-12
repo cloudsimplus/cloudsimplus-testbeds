@@ -48,7 +48,7 @@ import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompl
  *
  * @author raysaoliveira
  */
-class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment {
+class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment<CloudletTaskCompletionTimeWithoutMinimizationExperiment> {
     private static final int SCHEDULING_INTERVAL = 5;
 
     private final SlaContract contract;

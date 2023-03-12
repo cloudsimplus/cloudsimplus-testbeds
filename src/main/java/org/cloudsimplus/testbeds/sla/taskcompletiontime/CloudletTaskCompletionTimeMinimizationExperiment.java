@@ -64,7 +64,7 @@ import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompl
  * @author raysaoliveira
  * @see #selectVmForCloudlet(Cloudlet)
  */
-final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment {
+final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment<CloudletTaskCompletionTimeMinimizationExperiment> {
     private static final int SCHEDULING_INTERVAL = 5;
 
     private final ContinuousDistribution randCloudlet, randVm, randCloudletPes, randMipsVm;
