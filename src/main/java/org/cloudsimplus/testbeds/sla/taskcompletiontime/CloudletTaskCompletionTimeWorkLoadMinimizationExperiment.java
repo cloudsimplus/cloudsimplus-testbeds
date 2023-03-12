@@ -56,7 +56,7 @@ import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompl
  *
  * @author raysaoliveira
  */
-class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment {
+class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment<CloudletTaskCompletionTimeWorkLoadMinimizationExperiment> {
 
     /**
      * The file containing the SLA Contract in JSON format.
