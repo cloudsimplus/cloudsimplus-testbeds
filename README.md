@@ -1,7 +1,7 @@
 # CloudSim Plus Testbeds [![Build Status](https://github.com/cloudsimplus/cloudsimplus-testbeds/actions/workflows/maven.yml/badge.svg)](https://github.com/cloudsimplus/cloudsimplus-testbeds/actions/workflows/maven.yml)
 
 [CloudSim Plus](https://github.com/cloudsimplus/cloudsimplus) module containing a set of classes that enable you to implement simulations in a repeated manner.
-It provide base abstract classes that can be extended to implement a simulation scenario
+It provides base abstract classes that can be extended to implement a simulation scenario
 that is executed multiple times and uses Pseudo Random Number Generators (PRNGs) to
 set simulation parameters according to a behavior you want to investigate in your research.
 
