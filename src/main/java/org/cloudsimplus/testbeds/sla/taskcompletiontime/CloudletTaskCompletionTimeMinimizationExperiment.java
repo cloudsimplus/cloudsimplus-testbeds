@@ -23,21 +23,21 @@
  */
 package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.cloudlets.CloudletSimple;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
-import org.cloudbus.cloudsim.distributions.UniformDistr;
-import org.cloudbus.cloudsim.schedulers.cloudlet.CloudletSchedulerCompletelyFair;
-import org.cloudbus.cloudsim.util.ResourceLoader;
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModel;
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModelDynamic;
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModelFull;
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.vms.VmSimple;
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.cloudlets.CloudletSimple;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.distributions.ContinuousDistribution;
+import org.cloudsimplus.distributions.UniformDistr;
+import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerCompletelyFair;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
+import org.cloudsimplus.util.ResourceLoader;
+import org.cloudsimplus.utilizationmodels.UtilizationModel;
+import org.cloudsimplus.utilizationmodels.UtilizationModelDynamic;
+import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
+import org.cloudsimplus.vms.Vm;
+import org.cloudsimplus.vms.VmSimple;
 
 import java.util.*;
 import java.util.function.Function;
@@ -207,7 +207,7 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final double taskCompletionTimeSlaContract = getTaskCompletionTimeFromContract(cloudlet.getBroker());
 
         return execVms.stream()
-            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cloudlet.getNumberOfPes())
+            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cloudlet.getPesNumber())
             .filter(vm -> getExpectedCloudletCompletionTime(cloudlet, vm) <= taskCompletionTimeSlaContract)
             .findFirst()
             .orElse(mostFreePesVm);
@@ -225,14 +225,14 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final long totalPesForCloudletsOfVm
             = vm.getBroker().getCloudletCreatedList().stream()
             .filter(c -> c.getVm().equals(vm))
-            .mapToLong(Cloudlet::getNumberOfPes)
+            .mapToLong(Cloudlet::getPesNumber)
             .sum();
 
-        final long numberOfVmFreePes = vm.getNumberOfPes() - totalPesForCloudletsOfVm;
+        final long numberOfVmFreePes = vm.getPesNumber() - totalPesForCloudletsOfVm;
 
         System.out.printf(
             "\t\tTotal PEs of Cloudlets in %s: %d -> VM PEs: %d -> VM free PEs: %d",
-            vm, totalPesForCloudletsOfVm, vm.getNumberOfPes(), numberOfVmFreePes);
+            vm, totalPesForCloudletsOfVm, vm.getPesNumber(), numberOfVmFreePes);
 
         return numberOfVmFreePes;
     }
