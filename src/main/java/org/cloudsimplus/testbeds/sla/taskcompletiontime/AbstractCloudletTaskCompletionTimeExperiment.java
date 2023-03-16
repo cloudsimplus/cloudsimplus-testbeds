@@ -24,18 +24,18 @@
 package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudbus.cloudsim.brokers.DatacenterBrokerSimple;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.core.AbstractMachine;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.hosts.HostSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.ResourceProvisionerSimple;
-import org.cloudbus.cloudsim.resources.Pe;
-import org.cloudbus.cloudsim.resources.PeSimple;
-import org.cloudbus.cloudsim.schedulers.vm.VmSchedulerTimeShared;
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.brokers.DatacenterBrokerSimple;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.AbstractMachine;
+import org.cloudsimplus.hosts.Host;
+import org.cloudsimplus.hosts.HostSimple;
+import org.cloudsimplus.provisioners.PeProvisionerSimple;
+import org.cloudsimplus.provisioners.ResourceProvisionerSimple;
+import org.cloudsimplus.resources.Pe;
+import org.cloudsimplus.resources.PeSimple;
+import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
 import org.cloudsimplus.testbeds.Experiment;
 import org.cloudsimplus.testbeds.ExperimentRunner;
 
@@ -78,13 +78,13 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
      */
     protected final double getSumPesVms() {
         return getVmList().stream()
-            .mapToDouble(AbstractMachine::getNumberOfPes)
+            .mapToDouble(AbstractMachine::getPesNumber)
             .sum();
     }
 
     protected final double getSumPesCloudlets() {
         return getCloudletList().stream()
-            .mapToDouble(Cloudlet::getNumberOfPes)
+            .mapToDouble(Cloudlet::getPesNumber)
             .sum();
     }
 

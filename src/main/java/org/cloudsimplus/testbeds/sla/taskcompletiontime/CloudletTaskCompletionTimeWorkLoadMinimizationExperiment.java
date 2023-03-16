@@ -23,19 +23,19 @@
  */
 package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
-import org.cloudbus.cloudsim.distributions.UniformDistr;
-import org.cloudbus.cloudsim.schedulers.cloudlet.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.util.ResourceLoader;
-import org.cloudbus.cloudsim.util.SwfWorkloadFileReader;
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.vms.VmSimple;
+import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
 import org.cloudsimplus.builders.tables.TextTableColumn;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.distributions.ContinuousDistribution;
+import org.cloudsimplus.distributions.UniformDistr;
+import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerTimeShared;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
+import org.cloudsimplus.util.ResourceLoader;
+import org.cloudsimplus.util.SwfWorkloadFileReader;
+import org.cloudsimplus.vms.Vm;
+import org.cloudsimplus.vms.VmSimple;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -157,7 +157,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         taskCompletionTimeSlaContract = contractsMap.get(cl.getBroker()).getTaskCompletionTimeMetric().getMaxDimension().getValue();
 
         return execVms.stream()
-            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cl.getNumberOfPes())
+            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cl.getPesNumber())
             .filter(vm -> getExpectedCloudletCompletionTime(cl, vm) <= taskCompletionTimeSlaContract)
             .findFirst()
             .orElse(mostFreePesVm);
@@ -179,10 +179,10 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         final long totalPesNumberForCloudletsOfVm
                 = vm.getBroker().getCloudletCreatedList().stream()
                         .filter(c -> c.getVm().equals(vm))
-                        .mapToLong(Cloudlet::getNumberOfPes)
+                        .mapToLong(Cloudlet::getPesNumber)
                         .sum();
 
-        return vm.getNumberOfPes() - totalPesNumberForCloudletsOfVm;
+        return vm.getPesNumber() - totalPesNumberForCloudletsOfVm;
     }
 
     @Override

@@ -25,7 +25,7 @@
  */
 package org.cloudsimplus.testbeds.hostfaultinjection;
 
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
+import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.faultinjection.HostFaultInjection;
 import org.cloudsimplus.testbeds.ExperimentRunner;
 
