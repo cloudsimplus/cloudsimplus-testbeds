@@ -31,7 +31,7 @@ import org.cloudsimplus.distributions.UniformDistr;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerCompletelyFair;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
-import org.cloudsimplus.util.SwfWorkloadFileReader;
+import org.cloudsimplus.traces.SwfWorkloadFileReader;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
 
