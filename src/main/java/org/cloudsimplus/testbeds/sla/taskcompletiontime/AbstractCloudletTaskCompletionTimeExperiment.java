@@ -66,7 +66,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
     protected final void printBrokerFinishedCloudlets(final DatacenterBroker broker) {
         final List<Cloudlet> finishedCloudlets = broker.getCloudletFinishedList();
         final Comparator<Cloudlet> sortByVmId = comparingDouble(c -> c.getVm().getId());
-        final Comparator<Cloudlet> sortByStartTime = comparingDouble(Cloudlet::getExecStartTime);
+        final Comparator<Cloudlet> sortByStartTime = comparingDouble(Cloudlet::getStartTime);
         finishedCloudlets.sort(sortByVmId.thenComparing(sortByStartTime));
 
         new CloudletsTableBuilder(finishedCloudlets).build();
@@ -94,7 +94,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
      * @param cloudletList list of cloudlets
      */
     protected final void waitTimeAverage(final List<Cloudlet> cloudletList) {
-        final double averageWaitTime = cloudletList.stream().mapToDouble(Cloudlet::getWaitingTime).average().orElse(0);
+        final double averageWaitTime = cloudletList.stream().mapToDouble(Cloudlet::getCreationWaitTime).average().orElse(0);
         System.out.printf("%n# The wait time is: %f%n", averageWaitTime);
     }
 
@@ -111,7 +111,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
             .orElse(DatacenterBroker.NULL);
 
         broker.getCloudletFinishedList().stream()
-            .map(c -> c.getFinishTime() - c.getArrivalTime())
+            .map(c -> c.getFinishTime() - c.getDcArrivalTime())
             .forEach(cloudletTaskCompletionTime::addValue);
 
         return cloudletTaskCompletionTime.getMean();

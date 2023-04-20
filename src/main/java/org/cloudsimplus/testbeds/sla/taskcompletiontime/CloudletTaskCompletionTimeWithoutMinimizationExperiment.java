@@ -161,7 +161,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
                 .orElse(DatacenterBroker.NULL);
 
         double totalOfcloudletSlaSatisfied = broker.getCloudletFinishedList().stream()
-                .map(c -> c.getFinishTime() - c.getArrivalTime())
+                .map(c -> c.getFinishTime() - c.getDcArrivalTime())
                 .filter(rt -> rt <= getSlaMaxTaskCompletionTime())
                 .count();
 

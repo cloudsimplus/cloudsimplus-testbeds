@@ -119,7 +119,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
 
         new CloudletsTableBuilder(finishedCloudlets)
             .addColumn(new TextTableColumn("VM    ", "MIPS  "), c -> (long)c.getVm().getMips(), 7)
-            .addColumn(new TextTableColumn("Wait Time", "Seconds"), c -> Math.ceil(c.getWaitingTime()))
+            .addColumn(new TextTableColumn("Wait Time", "Seconds"), c -> Math.ceil(c.getCreationWaitTime()))
             .build();
     }
 
@@ -223,7 +223,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         final DatacenterBroker broker = getFirstBroker();
 
         final double totalOfCloudletSlaSatisfied = broker.getCloudletFinishedList().stream()
-                .map(c -> c.getActualCpuTime() + c.getWaitingTime())
+                .map(c -> c.getTotalExecutionTime() + c.getStartWaitTime())
                 .filter(rt -> rt <= getSlaMaxTaskCompletionTime(broker))
                 .count();
 
