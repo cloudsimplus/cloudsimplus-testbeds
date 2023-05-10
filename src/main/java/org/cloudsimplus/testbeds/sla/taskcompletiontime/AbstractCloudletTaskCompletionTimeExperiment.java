@@ -28,7 +28,7 @@ import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.DatacenterBrokerSimple;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
 import org.cloudsimplus.cloudlets.Cloudlet;
-import org.cloudsimplus.core.AbstractMachine;
+import org.cloudsimplus.core.Machine;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSimple;
 import org.cloudsimplus.provisioners.PeProvisionerSimple;
@@ -78,7 +78,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
      */
     protected final double getSumPesVms() {
         return getVmList().stream()
-            .mapToDouble(AbstractMachine::getPesNumber)
+            .mapToDouble(Machine::getPesNumber)
             .sum();
     }
 
