@@ -16,3 +16,20 @@ It also computes confidence intervals for the final results and present
 them in a organized way.
 
 Different from the [examples module](https://github.com/cloudsimplus/cloudsimplus-examples) that aims just to show how to use CloudSim Plus features, this module includes more complex simulation scenarios concerned in providing scientifically valid results.
+
+## Build the Project
+
+In order to build the jar file to run the tool, you need JDK 17+ installed.
+You can use any IDE of your choice or open a terminal at the project root directory and type one of the following commands:
+
+on Linux/macOS
+
+```bash
+./mvnw clean install
+```
+
+on Windows
+
+```bash
+./mvnw.cmd clean install
+```
