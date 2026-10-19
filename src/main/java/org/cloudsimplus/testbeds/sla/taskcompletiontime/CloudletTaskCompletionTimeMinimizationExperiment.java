@@ -38,6 +38,7 @@ import org.cloudsimplus.utilizationmodels.UtilizationModelDynamic;
 import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -95,7 +96,7 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         this(index, runner, -1);
     }
 
-    private CloudletTaskCompletionTimeMinimizationExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    private CloudletTaskCompletionTimeMinimizationExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         setVmsByBrokerFunction(broker -> VMS);
         this.randCloudlet = new UniformDistr(getSeed());
@@ -248,7 +249,8 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
      * @see #contractsMap
      */
     private double getTaskCompletionTimeFromContract(final DatacenterBroker broker) {
-        return contractsMap.get(broker).getTaskCompletionTimeMetric().getMaxDimension().getValue();
+        return Objects.requireNonNull(contractsMap.get(broker), "No SLA contract found for broker " + broker.getId())
+            .getTaskCompletionTimeMetric().getMaxDimension().getValue();
     }
 
     /**

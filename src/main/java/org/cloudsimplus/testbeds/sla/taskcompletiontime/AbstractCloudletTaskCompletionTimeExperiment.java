@@ -38,6 +38,7 @@ import org.cloudsimplus.resources.PeSimple;
 import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
 import org.cloudsimplus.testbeds.Experiment;
 import org.cloudsimplus.testbeds.ExperimentRunner;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -53,7 +54,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
     private static final int HOSTS = 50;
     private static final int HOST_PES = 32;
 
-    protected AbstractCloudletTaskCompletionTimeExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    protected AbstractCloudletTaskCompletionTimeExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         setVmsByBrokerFunction(broker -> VMS);
         setHostsNumber(HOSTS);

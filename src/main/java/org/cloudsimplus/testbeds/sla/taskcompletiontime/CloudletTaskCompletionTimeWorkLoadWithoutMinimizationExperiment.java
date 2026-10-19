@@ -34,6 +34,7 @@ import org.cloudsimplus.testbeds.ExperimentRunner;
 import org.cloudsimplus.traces.SwfWorkloadFileReader;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ class CloudletTaskCompletionTimeWorkLoadWithoutMinimizationExperiment extends Ab
         this(index, runner, -1);
     }
 
-    private CloudletTaskCompletionTimeWorkLoadWithoutMinimizationExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    private CloudletTaskCompletionTimeWorkLoadWithoutMinimizationExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         this.randVm = new UniformDistr(1475098589732L + 1);
         this.contract = SlaContract.getInstance(METRICS_FILE);
@@ -82,7 +83,7 @@ class CloudletTaskCompletionTimeWorkLoadWithoutMinimizationExperiment extends Ab
 
     /** The method is not being used for this experiment because the Cloudlets are created by the workload reader. */
     @Override
-    protected Cloudlet createCloudlet(final DatacenterBroker broker) { return null; }
+    protected Cloudlet createCloudlet(final DatacenterBroker broker) { return Cloudlet.NULL; }
 
     @Override
     protected Datacenter createDatacenter(final int index) {

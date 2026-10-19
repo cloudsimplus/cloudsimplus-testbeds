@@ -55,6 +55,7 @@ import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
 import org.cloudsimplus.vmtemplates.AwsEc2Template;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -120,8 +121,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
      */
     private static final int HOSTS = 30;
 
-    private List<Host> hostList;
-
+    @SuppressWarnings("NullAway.Init") // set in createFaultInjectionForHosts(), called after the experiment is built
     private HostFaultInjection faultInjection;
 
     /**
@@ -148,7 +148,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
         this(index, runner, -1);
     }
 
-    private HostFaultInjectionExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    private HostFaultInjectionExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         setBrokersNumber(readContractList().size());
         setAfterExperimentBuild(exp -> getDatacenterList().forEach(this::createFaultInjectionForHosts));
@@ -279,7 +279,11 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     }
 
     private SlaContract getContract(final DatacenterBroker broker){
-        return contractsMap.get(broker);
+        return Objects.requireNonNull(contractsMap.get(broker), "No SLA contract found for broker " + broker.getId());
+    }
+
+    private AwsEc2Template getTemplate(final DatacenterBroker broker){
+        return Objects.requireNonNull(templatesMap.get(broker), "No AWS EC2 template found for broker " + broker.getId());
     }
 
     private List<AwsEc2Template> readAllAvailableAwsEc2Instances() throws IOException {
@@ -296,7 +300,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     }
 
     public Vm createVm(final DatacenterBroker broker, final int id) {
-        final AwsEc2Template template = templatesMap.get(broker);
+        final AwsEc2Template template = getTemplate(broker);
         final Vm vm = new VmSimple(id, VM_MIPS, template.getCpus());
         vm
             .setRam(template.getMemoryInMB()).setBw(VM_BW).setSize(VM_SIZE)
@@ -500,7 +504,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
      * @return minimum customer availability
      */
     private double getCustomerMinAvailability(final DatacenterBroker broker) {
-        return contractsMap.get(broker).getAvailabilityMetric().getMinDimension().getValue();
+        return getContract(broker).getAvailabilityMetric().getMinDimension().getValue();
 
     }
 
@@ -511,7 +515,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     public double getTotalCost(final DatacenterBroker broker) {
         final SlaContract contract = getContract(broker);
 
-        final AwsEc2Template template = templatesMap.get(broker);
+        final AwsEc2Template template = getTemplate(broker);
         final double totalPriceForVmsInOneHour = getActualPriceForAllVms(contract, template);
         final double totalExecutionTimeForVmsInHours = getTotalExecutionTimeForVmsInHours(broker);
 

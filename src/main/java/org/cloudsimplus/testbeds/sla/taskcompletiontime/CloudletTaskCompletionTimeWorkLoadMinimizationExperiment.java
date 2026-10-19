@@ -36,11 +36,13 @@ import org.cloudsimplus.traces.SwfWorkloadFileReader;
 import org.cloudsimplus.util.ResourceLoader;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Comparator.comparingDouble;
 import static java.util.Comparator.comparingLong;
@@ -82,7 +84,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         this(index, runner, -1);
     }
 
-    private CloudletTaskCompletionTimeWorkLoadMinimizationExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    private CloudletTaskCompletionTimeWorkLoadMinimizationExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         randVm = new UniformDistr(getSeed()+1);
         randMip = new UniformDistr(getSeed()+2);
@@ -135,7 +137,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
 
     /** The method is not being used for this experiment because the Cloudlets are created by the workload reader. */
     @Override
-    protected Cloudlet createCloudlet(final DatacenterBroker broker) { return null; }
+    protected Cloudlet createCloudlet(final DatacenterBroker broker) { return Cloudlet.NULL; }
 
     /**
      * Selects a VM to run a Cloudlet that will minimize the Cloudlet response
@@ -154,7 +156,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         );
         final Vm mostFreePesVm = execVms.stream().findFirst().orElse(Vm.NULL);
 
-        taskCompletionTimeSlaContract = contractsMap.get(cl.getBroker()).getTaskCompletionTimeMetric().getMaxDimension().getValue();
+        taskCompletionTimeSlaContract = getSlaMaxTaskCompletionTime(cl.getBroker());
 
         return execVms.stream()
             .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cl.getPesNumber())
@@ -238,7 +240,8 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
     }
 
     private double getSlaMaxTaskCompletionTime(final DatacenterBroker broker) {
-        return contractsMap.get(broker).getTaskCompletionTimeMetric().getMaxDimension().getValue();
+        return Objects.requireNonNull(contractsMap.get(broker), "No SLA contract found for broker " + broker.getId())
+            .getTaskCompletionTimeMetric().getMaxDimension().getValue();
     }
 
     /**
