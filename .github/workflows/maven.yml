@@ -7,15 +7,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-    name: Java 17 Build
+    runs-on: ubuntu-latest
+    name: Java 21 Build
     steps:
       - uses: actions/checkout@v3
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: 17
+          java-version: 21
           cache: 'maven'
       - name: Maven Build
         run: mvn -B package

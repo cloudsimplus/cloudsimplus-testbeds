@@ -37,6 +37,7 @@ import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmCost;
 import org.cloudsimplus.vms.VmSimple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -68,7 +69,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         this(index, runner, -1);
     }
 
-    private CloudletTaskCompletionTimeWithoutMinimizationExperiment(final int index, final ExperimentRunner runner, final long seed) {
+    private CloudletTaskCompletionTimeWithoutMinimizationExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
         randCloudlet = new UniformDistr(getSeed());
         randVm = new UniformDistr(getSeed()+1);

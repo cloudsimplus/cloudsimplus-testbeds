@@ -37,4 +37,7 @@
  *
  * @author raysaoliveira
  */
+@NullMarked
 package org.cloudsimplus.testbeds.hostfaultinjection;
+
+import org.jspecify.annotations.NullMarked;
