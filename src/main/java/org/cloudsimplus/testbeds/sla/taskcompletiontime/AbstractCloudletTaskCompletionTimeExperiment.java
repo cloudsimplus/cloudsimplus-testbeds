@@ -23,7 +23,6 @@
  */
 package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.DatacenterBrokerSimple;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
@@ -96,18 +95,16 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
     /// Computes the Task Completion Time average for all finished Cloudlets on this
     /// experiment.
     ///
-    /// @return the Task Completion Time average
+    /// @return the Task Completion Time average or [Double#NaN] if no Cloudlet has finished
     protected double getTaskCompletionTimeAverage() {
-        final SummaryStatistics cloudletTaskCompletionTime = new SummaryStatistics();
         final DatacenterBroker broker = getBrokerList().stream()
             .findFirst()
             .orElse(DatacenterBroker.NULL);
 
-        broker.getCloudletFinishedList().stream()
-            .map(c -> c.getFinishTime() - c.getDcArrivalTime())
-            .forEach(cloudletTaskCompletionTime::addValue);
-
-        return cloudletTaskCompletionTime.getMean();
+        return broker.getCloudletFinishedList().stream()
+            .mapToDouble(c -> c.getFinishTime() - c.getDcArrivalTime())
+            .average()
+            .orElse(Double.NaN);
     }
 
     protected final Host createHost(final int id) {
