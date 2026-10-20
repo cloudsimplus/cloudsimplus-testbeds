@@ -47,9 +47,7 @@ import java.util.List;
 import static java.util.Comparator.comparingDouble;
 import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompletionTimeWorkLoadWithoutMinimizationRunner.VMS;
 
-/**
- * @param <T> the type of the subclass extending this class
- */
+/// @param <T> the type of the subclass extending this class
 abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment<T>> extends Experiment<T> {
     private static final int HOSTS = 50;
     private static final int HOST_PES = 32;
@@ -73,10 +71,8 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
         new CloudletsTableBuilder(finishedCloudlets).build();
     }
 
-    /**
-     * Gets the total number of vPEs (VM PEs) across all existing VMs.
-     * @return
-     */
+    /// Gets the total number of vPEs (VM PEs) across all existing VMs.
+    /// @return
     protected final double getSumPesVms() {
         return getVmList().stream()
             .mapToDouble(Machine::getPesNumber)
@@ -89,22 +85,18 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
             .sum();
     }
 
-    /**
-     * Shows the average wait time of all cloudlets
-     *
-     * @param cloudletList list of cloudlets
-     */
+    /// Shows the average wait time of all cloudlets
+    ///
+    /// @param cloudletList list of cloudlets
     protected final void waitTimeAverage(final List<Cloudlet> cloudletList) {
         final double averageWaitTime = cloudletList.stream().mapToDouble(Cloudlet::getCreationWaitTime).average().orElse(0);
         System.out.printf("%n# The wait time is: %f%n", averageWaitTime);
     }
 
-    /**
-     * Computes the Task Completion Time average for all finished Cloudlets on this
-     * experiment.
-     *
-     * @return the Task Completion Time average
-     */
+    /// Computes the Task Completion Time average for all finished Cloudlets on this
+    /// experiment.
+    ///
+    /// @return the Task Completion Time average
     protected double getTaskCompletionTimeAverage() {
         final SummaryStatistics cloudletTaskCompletionTime = new SummaryStatistics();
         final DatacenterBroker broker = getBrokerList().stream()
