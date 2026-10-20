@@ -36,60 +36,45 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-/**
- * Runs the {@link HostFaultInjectionExperiment} the number of
- * times defines by {@link #getSimulationRuns()} and compute statistics.
- *
- * <p>For more details, check
- * <a href="http://www.di.ubi.pt/~mario/files/MScDissertation-RaysaOliveira.pdf">Raysa Oliveira's Master Thesis (only in Portuguese)</a>.</p>
- *
- * @author raysaoliveira
- */
+/// Runs the [HostFaultInjectionExperiment] the number of
+/// times defines by [#getSimulationRuns()] and compute statistics.
+///
+/// For more details, check
+/// [Raysa Oliveira's Master Thesis (only in Portuguese)](http://www.di.ubi.pt/~mario/files/MScDissertation-RaysaOliveira.pdf).
+///
+/// @author raysaoliveira
 public final class HostFaultInjectionRunner extends ExperimentRunner<HostFaultInjectionExperiment> {
-    /**
-     * Different lengths that will be randomly assigned to created Cloudlets.
-     */
+    /// Different lengths that will be randomly assigned to created Cloudlets.
     static final long[] CLOUDLET_LENGTHS = {1000_000_000L, 1800_000_000L, 2800_000_000L};
 
-    /**
-     * Indicates if each experiment will output execution logs or not.
-     */
+    /// Indicates if each experiment will output execution logs or not.
     private final boolean experimentVerbose = false;
 
-    /**
-     * A map of each availability achieved by each broker for each experiment.
-     * The key is a broker's name and the List for that key represents the availability
-     * reached by that broker in each experiment, for instance:
-     *
-     * <ul>
-     *    <li>Broker1 -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}</li>
-     *    <li>Broker2 -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}</li>
-     *    <li>BrokerN -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}</li>
-     * </ul>
-     *
-     * <p>It's used the broker's name instead of an actual broker instance
-     * because, despite each simulation run creates the same brokers
-     * (one for each SLA JSON file), they are different instances.
-     * As we want to relate, for instance, the broker 0 of one experiment
-     * run with the same broker 0 in all other runs,
-     * it's needed to use a String.
-     * </p>
-     */
+    /// A map of each availability achieved by each broker for each experiment.
+    /// The key is a broker's name and the List for that key represents the availability
+    /// reached by that broker in each experiment, for instance:
+    ///
+    /// - Broker1 -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}
+    /// - Broker2 -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}
+    /// - BrokerN -> {AvailabilityExperiment1, AvailabilityExperiment2 ... AvailabilityExperimentN}
+    ///
+    /// It's used the broker's name instead of an actual broker instance
+    /// because, despite each simulation run creates the same brokers
+    /// (one for each SLA JSON file), they are different instances.
+    /// As we want to relate, for instance, the broker 0 of one experiment
+    /// run with the same broker 0 in all other runs,
+    /// it's needed to use a String.
     private Map<String, List<Double>> availabilityByBroker;
 
-    /**
-     * Gets the cost total of each broker.
-     */
+    /// Gets the cost total of each broker.
     private Map<String, List<Double>> costTotal;
 
     private final Map<String, List<Double>> template;
 
-    /**
-     * Starts the execution of the experiments the number of times defines in
-     * {@link #getSimulationRuns()}.
-     *
-     * @param args command line arguments
-     */
+    /// Starts the execution of the experiments the number of times defines in
+    /// [#getSimulationRuns()].
+    ///
+    /// @param args command line arguments
     public static void main(String[] args) {
         new HostFaultInjectionRunner(true, 1475098589732L)
                 .setVerbose(true)
@@ -110,13 +95,11 @@ public final class HostFaultInjectionRunner extends ExperimentRunner<HostFaultIn
         return exp;
     }
 
-    /**
-     * Method automatically called after every experiment finishes running. It
-     * performs some post-processing such as collection of data for statistic
-     * analysis.
-     *
-     * @param exp the finished experiment
-     */
+    /// Method automatically called after every experiment finishes running. It
+    /// performs some post-processing such as collection of data for statistic
+    /// analysis.
+    ///
+    /// @param exp the finished experiment
     private void afterExperimentFinish(HostFaultInjectionExperiment exp) {
         final HostFaultInjection faultInjection = exp.getFaultInjection();
 
@@ -150,35 +133,29 @@ public final class HostFaultInjectionRunner extends ExperimentRunner<HostFaultIn
         getCustomerActualPricePerHour.forEach(this::addExperimentPriceCustomerPerHour);
     }
 
-    /**
-     * Gets the availability of a broker for an experiment
-     * and adds such a value to the List of availability of that broker
-     * inside the map of all brokers.
-     * @param broker the broker to add the availability of an experiment to its list of availabilities
-     * @param availability the availability of the broker for the experiment
-     */
+    /// Gets the availability of a broker for an experiment
+    /// and adds such a value to the List of availability of that broker
+    /// inside the map of all brokers.
+    /// @param broker the broker to add the availability of an experiment to its list of availabilities
+    /// @param availability the availability of the broker for the experiment
     private boolean addExperimentAvailabilityToBroker(final DatacenterBroker broker, final double availability) {
         return availabilityByBroker.computeIfAbsent(broker.getName(), name -> new ArrayList<>()).add(availability);
     }
 
-    /**
-     * Gets the cost of a broker for an experiment
-     * and adds such a value to the List of costs of that broker
-     * inside the map of all brokers.
-     * @param broker the broker to add the availability of an experiment to its list of availabilities
-     * @param cost the cost of the broker for the experiment
-     */
+    /// Gets the cost of a broker for an experiment
+    /// and adds such a value to the List of costs of that broker
+    /// inside the map of all brokers.
+    /// @param broker the broker to add the availability of an experiment to its list of availabilities
+    /// @param cost the cost of the broker for the experiment
     private boolean addExperimentCostToBroker(final DatacenterBroker broker, final double cost) {
         return costTotal.computeIfAbsent(broker.getName(), name -> new ArrayList<>()).add(cost);
     }
 
-    /**
-     * Gets the actual price of all customers VMs per hour for an experiment
-     * and adds such a value to the List of costs of that broker
-     * inside the map of all brokers.
-     * @param broker the broker to add the availability of an experiment to its list of availabilities
-     * @param priceCustomerPerHour the customer's price of the broker for the experiment
-     */
+    /// Gets the actual price of all customers VMs per hour for an experiment
+    /// and adds such a value to the List of costs of that broker
+    /// inside the map of all brokers.
+    /// @param broker the broker to add the availability of an experiment to its list of availabilities
+    /// @param priceCustomerPerHour the customer's price of the broker for the experiment
     private boolean addExperimentPriceCustomerPerHour(final DatacenterBroker broker, final double priceCustomerPerHour) {
         return template.computeIfAbsent(broker.getName(), name -> new ArrayList<>()).add(priceCustomerPerHour);
     }

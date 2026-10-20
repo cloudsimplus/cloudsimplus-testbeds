@@ -25,33 +25,25 @@ package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
 import org.cloudsimplus.testbeds.ExperimentRunner;
 
-/**
- * Runs the {@link CloudletTaskCompletionTimeWithoutMinimizationExperiment} the number of
- * times defined by {@link #getSimulationRuns()} and computes statistics.
- *
- * @author raysaoliveira
- */
+/// Runs the [CloudletTaskCompletionTimeWithoutMinimizationExperiment] the number of
+/// times defined by [#getSimulationRuns()] and computes statistics.
+///
+/// @author raysaoliveira
 public class CloudletTaskCompletionTimeWithoutMinimizationRunner extends ExperimentRunner<CloudletTaskCompletionTimeWithoutMinimizationExperiment> {
 
-    /**
-     * Different lengths that will be randomly assigned to created Cloudlets.
-     */
+    /// Different lengths that will be randomly assigned to created Cloudlets.
     static final long[] CLOUDLET_LENGTHS = {10000, 14000, 20000, 40000};
     static final int CLOUDLETS = 90;
     public static final int VMS = 30;
     public static final int[] VM_PES = {2, 4};
 
-    /**
-     * Indicates if each experiment will output execution logs or not.
-     */
+    /// Indicates if each experiment will output execution logs or not.
     private final boolean experimentVerbose = false;
 
-    /**
-     * Starts the execution of the experiments the number of times defines in
-     * {@link #getSimulationRuns()}.
-     *
-     * @param args command line arguments
-     */
+    /// Starts the execution of the experiments the number of times defines in
+    /// [#getSimulationRuns()].
+    ///
+    /// @param args command line arguments
     public static void main(String[] args) {
         new CloudletTaskCompletionTimeWithoutMinimizationRunner(true, 1475098589732L)
                 .setVerbose(true)
@@ -70,12 +62,10 @@ public class CloudletTaskCompletionTimeWithoutMinimizationRunner extends Experim
         return exp;
     }
 
-    /**
-     * Method automatically called after every experiment finishes running.
-     * It performs some post-processing such as collection of data for statistic analysis.
-     *
-     * @param experiment the finished experiment
-     */
+    /// Method automatically called after every experiment finishes running.
+    /// It performs some post-processing such as collection of data for statistic analysis.
+    ///
+    /// @param experiment the finished experiment
     private void afterExperimentFinish(CloudletTaskCompletionTimeWithoutMinimizationExperiment experiment) {
         //The Task Completion Time average for all the experiments.
         addMetricValue("Cloudlet Task Completion Time", experiment.getTaskCompletionTimeAverage());

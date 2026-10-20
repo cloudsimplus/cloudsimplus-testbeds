@@ -49,28 +49,22 @@ import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.toList;
 import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompletionTimeWorkLoadMinimizationRunner.*;
 
-/**
- * An experiment that tries to minimize task completion time,
- * where tasks are created from a workload file.
- *
- * <p>For more details, check
- * <a href="http://www.di.ubi.pt/~mario/files/MScDissertation-RaysaOliveira.pdf">Raysa Oliveira's Master Thesis (only in Portuguese)</a>.</p>
- *
- * @author raysaoliveira
- */
+/// An experiment that tries to minimize task completion time,
+/// where tasks are created from a workload file.
+///
+/// For more details, check
+/// [Raysa Oliveira's Master Thesis (only in Portuguese)](http://www.di.ubi.pt/~mario/files/MScDissertation-RaysaOliveira.pdf).
+///
+/// @author raysaoliveira
 class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment<CloudletTaskCompletionTimeWorkLoadMinimizationExperiment> {
 
-    /**
-     * The file containing the SLA Contract in JSON format.
-     */
+    /// The file containing the SLA Contract in JSON format.
     private static final String SLA_CONTRACTS_LIST = "sla-files.txt";
     private Map<DatacenterBroker, SlaContract> contractsMap;
 
-    /**
-     * Sorts the Cloudlets before submitting them to the Broker, so that
-     * Cloudlets with larger length will be mapped for a VM first than lower
-     * ones.
-     */
+    /// Sorts the Cloudlets before submitting them to the Broker, so that
+    /// Cloudlets with larger length will be mapped for a VM first than lower
+    /// ones.
     private final Comparator<Cloudlet> sortCloudletsByLengthReversed = Comparator.comparingLong(Cloudlet::getLength).reversed();
     private ContinuousDistribution randVm;
     private ContinuousDistribution randMip;
@@ -91,11 +85,9 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         contractsMap = new HashMap<>();
     }
 
-    /**
-     * Read all SLA contracts registered in the {@link #SLA_CONTRACTS_LIST}.
-     * When the brokers are created, it is ensured the number of brokers
-     * is equals to the number of SLA contracts in the {@link #SLA_CONTRACTS_LIST}.
-     */
+    /// Read all SLA contracts registered in the [#SLA_CONTRACTS_LIST].
+    /// When the brokers are created, it is ensured the number of brokers
+    /// is equals to the number of SLA contracts in the [#SLA_CONTRACTS_LIST].
     private void readTheSlaContracts() {
         for (final String file: readContractList()) {
             SlaContract contract = SlaContract.getInstance(file);
@@ -135,17 +127,15 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         return list;
     }
 
-    /** The method is not being used for this experiment because the Cloudlets are created by the workload reader. */
+    /// The method is not being used for this experiment because the Cloudlets are created by the workload reader.
     @Override
     protected Cloudlet createCloudlet(final DatacenterBroker broker) { return Cloudlet.NULL; }
 
-    /**
-     * Selects a VM to run a Cloudlet that will minimize the Cloudlet response
-     * time.
-     *
-     * @param cl the Cloudlet to select a VM to
-     * @return the selected Vm
-     */
+    /// Selects a VM to run a Cloudlet that will minimize the Cloudlet response
+    /// time.
+    ///
+    /// @param cl the Cloudlet to select a VM to
+    /// @return the selected Vm
     private Vm selectVmForCloudlet(final Cloudlet cl) {
         final List<Vm> execVms = cl.getBroker().getVmExecList();
 
@@ -169,14 +159,12 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         return cloudlet.getLength() / vm.getMips();
     }
 
-    /**
-     * Gets the expected amount of free PEs for a VM
-     *
-     * @param vm the VM to get the amount of free PEs
-     * @return the number of PEs that are free or a negative value that indicate
-     * there aren't free PEs (this negative number indicates the amount of
-     * overloaded PEs)
-     */
+    /// Gets the expected amount of free PEs for a VM
+    ///
+    /// @param vm the VM to get the amount of free PEs
+    /// @return the number of PEs that are free or a negative value that indicate
+    /// there aren't free PEs (this negative number indicates the amount of
+    /// overloaded PEs)
     private long getExpectedNumberOfFreeVmPes(Vm vm) {
         final long totalPesNumberForCloudletsOfVm
                 = vm.getBroker().getCloudletCreatedList().stream()
@@ -244,24 +232,20 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
             .getTaskCompletionTimeMetric().getMaxDimension().getValue();
     }
 
-    /**
-     * Gets the ratio of existing vPEs (VM PEs) divided by the number
-     * of required PEs of all Cloudlets, which indicates
-     * the mean number of vPEs that are available for each PE required
-     * by a Cloudlet, considering all the existing Cloudlets.
-     * For instance, if the ratio is 0.5, in average, two Cloudlets
-     * requiring one vPE will share that same vPE.
-     * @return the average of vPEs/CloudletsPEs ratio
-     */
+    /// Gets the ratio of existing vPEs (VM PEs) divided by the number
+    /// of required PEs of all Cloudlets, which indicates
+    /// the mean number of vPEs that are available for each PE required
+    /// by a Cloudlet, considering all the existing Cloudlets.
+    /// For instance, if the ratio is 0.5, in average, two Cloudlets
+    /// requiring one vPE will share that same vPE.
+    /// @return the average of vPEs/CloudletsPEs ratio
     double getRatioOfExistingVmPesToRequiredCloudletPes() {
         return getSumPesVms() / getSumPesCloudlets();
     }
 
-    /**
-     * A main method just for test purposes.
-     *
-     * @param args
-     */
+    /// A main method just for test purposes.
+    ///
+    /// @param args
     public static void main(String[] args) {
         final CloudletTaskCompletionTimeWorkLoadMinimizationExperiment exp
             = new CloudletTaskCompletionTimeWorkLoadMinimizationExperiment(1475098589732L);

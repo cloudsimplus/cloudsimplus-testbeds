@@ -45,10 +45,7 @@ import java.util.List;
 
 import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompletionTimeWithoutMinimizationRunner.*;
 
-/**
- *
- * @author raysaoliveira
- */
+/// @author raysaoliveira
 class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCloudletTaskCompletionTimeExperiment<CloudletTaskCompletionTimeWithoutMinimizationExperiment> {
     private static final int SCHEDULING_INTERVAL = 5;
 
@@ -56,9 +53,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
 
     private final ContinuousDistribution randCloudlet, randVm;
 
-    /**
-     * The file containing the SLA Contract in JSON format.
-     */
+    /// The file containing the SLA Contract in JSON format.
     private static final String METRICS_FILE = "SlaMetrics.json";
 
     private CloudletTaskCompletionTimeWithoutMinimizationExperiment(final long seed) {
@@ -173,15 +168,13 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         return (totalOfcloudletSlaSatisfied * 100) / broker.getCloudletFinishedList().size();
     }
 
-    /**
-     * Gets the ratio of existing vPEs (VM PEs) divided by the number of
-     * required PEs of all Cloudlets, which indicates the mean number of vPEs
-     * that are available for each PE required by a Cloudlet, considering all
-     * the existing Cloudlets. For instance, if the ratio is 0.5, in average,
-     * two Cloudlets requiring one vPE will share that same vPE.
-     *
-     * @return the average of vPEs/CloudletsPEs ratio
-     */
+    /// Gets the ratio of existing vPEs (VM PEs) divided by the number of
+    /// required PEs of all Cloudlets, which indicates the mean number of vPEs
+    /// that are available for each PE required by a Cloudlet, considering all
+    /// the existing Cloudlets. For instance, if the ratio is 0.5, in average,
+    /// two Cloudlets requiring one vPE will share that same vPE.
+    ///
+    /// @return the average of vPEs/CloudletsPEs ratio
     double getRatioOfExistingVmPesToRequiredCloudletPes() {
         double sumPesVms = getSumPesVms();
         double sumPesCloudlets = getSumPesCloudlets();
@@ -189,11 +182,8 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         return sumPesVms / sumPesCloudlets;
     }
 
-    /**
-     * Calculates the cost price of resources (processing, bw, memory, storage)
-     * of each or all of the Datacenter VMs()
-     *
-     */
+    /// Calculates the cost price of resources (processing, bw, memory, storage)
+    /// of each or all of the Datacenter VMs()
     double getTotalCostPrice() {
         VmCost vmCost;
         double totalCost = 0.0;
@@ -207,11 +197,9 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         return totalCost;
     }
 
-    /**
-     * A main method just for test purposes.
-     *
-     * @param args
-     */
+    /// A main method just for test purposes.
+    ///
+    /// @param args
     public static void main(String[] args) {
         CloudletTaskCompletionTimeWithoutMinimizationExperiment exp
                 = new CloudletTaskCompletionTimeWithoutMinimizationExperiment(1);

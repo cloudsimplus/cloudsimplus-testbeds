@@ -25,29 +25,23 @@ package org.cloudsimplus.testbeds.sla.taskcompletiontime;
 
 import org.cloudsimplus.testbeds.ExperimentRunner;
 
-/**
- * Runs the {@link CloudletTaskCompletionTimeWorkLoadMinimizationExperiment} the number of
- * times defines by {@link #getSimulationRuns()} and compute statistics.
- *
- * @author raysaoliveira
- */
+/// Runs the [CloudletTaskCompletionTimeWorkLoadMinimizationExperiment] the number of
+/// times defines by [#getSimulationRuns()] and compute statistics.
+///
+/// @author raysaoliveira
 public class CloudletTaskCompletionTimeWorkLoadMinimizationRunner extends ExperimentRunner<CloudletTaskCompletionTimeWorkLoadMinimizationExperiment> {
     static final int[] VM_PES = {2, 4, 6};
     static final int[] VM_MIPS = {10000, 15000, 28000};
     public static final int VMS = 30;
     public static final int CLOUDLETS = 300;
 
-    /**
-     * Indicates if each experiment will output execution logs or not.
-     */
+    /// Indicates if each experiment will output execution logs or not.
     private static final boolean experimentVerbose = false;
 
-    /**
-     * Starts the execution of the experiments the number of times defines in
-     * {@link #getSimulationRuns()}.
-     *
-     * @param args command line arguments
-     */
+    /// Starts the execution of the experiments the number of times defines in
+    /// [#getSimulationRuns()].
+    ///
+    /// @param args command line arguments
     public static void main(String[] args) {
         new CloudletTaskCompletionTimeWorkLoadMinimizationRunner(true, 1475098589732L)
                 .setVerbose(true)
@@ -66,13 +60,11 @@ public class CloudletTaskCompletionTimeWorkLoadMinimizationRunner extends Experi
         return exp;
     }
 
-    /**
-     * Method automatically called after every experiment finishes running. It
-     * performs some post-processing such as collection of data for statistic
-     * analysis.
-     *
-     * @param exp the finished experiment
-     */
+    /// Method automatically called after every experiment finishes running. It
+    /// performs some post-processing such as collection of data for statistic
+    /// analysis.
+    ///
+    /// @param exp the finished experiment
     private void afterExperimentFinish(final CloudletTaskCompletionTimeWorkLoadMinimizationExperiment exp) {
         addMetricValue("Task Completion Time", exp.getTaskCompletionTimeAverage());
         addMetricValue("Percentage Of Cloudlets Meeting Task Completion Time", exp.getPercentageOfCloudletsMeetingCompletionTime());
