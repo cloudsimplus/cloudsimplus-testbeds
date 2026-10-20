@@ -8,7 +8,7 @@ CloudSim Plus Testbeds: more complex simulation scenarios that run an experiment
 
 ## Commands
 
-Requires JDK 17+ (`maven-compiler-plugin` uses `<release>17</release>`).
+Requires JDK 25 (`maven-compiler-plugin` uses `<release>25</release>`). The `.sdkmanrc` file sets Amazon Corretto 25 for [SDKMAN!](https://sdkman.io) users (`sdk env`).
 
 ```bash
 ./mvnw clean install        # build (CI runs: mvn -B package)
@@ -27,9 +27,10 @@ The jar manifest adds dependencies to the classpath using `~/.m2/repository/` pa
 
 ## Dependency on CloudSim Plus
 
-- The **module version is the CloudSim Plus version** used (`<version>8.5.0</version>` and the dependency uses `${project.version}`). It must match a released CloudSim Plus version; change both together by changing only the project version.
+- The **module version is the CloudSim Plus version** used (currently `<version>9.0.0-SNAPSHOT</version>`, and the dependency uses `${project.version}`). Change both together by changing only the project version.
 - The base abstractions (`Experiment`, `ExperimentRunner`, `AbstractRunnable`, `ConfidenceInterval`, `ResultTable` in package `org.cloudsimplus.testbeds`) are **not in this repo**: they live in the framework (`../cloudsimplus/src/main/java/org/cloudsimplus/testbeds/`). Only `package-info.java` of that package is here.
-- The sibling `../cloudsimplus` source is at `9.0.0-SNAPSHOT`, while this project resolves `8.5.0` from the Maven repository. Changes in `../cloudsimplus` have no effect here unless that version is installed (`mvn install` there) and this pom version is updated. Its API may also differ from 8.5.0.
+- SNAPSHOT versions are resolved from the local Maven repository or from the Maven Central snapshots repository (declared in `pom.xml`). To use changes made in the sibling `../cloudsimplus` project, run `mvn install` there first.
+- Only use libraries this project declares in `pom.xml`, not the ones that come indirectly from CloudSim Plus: they may be removed from the framework (e.g. Apache Commons Math 3 was replaced by Commons Statistics in 9.0.0).
 - Logging is through Logback (`logback-classic`).
 
 ## Architecture
