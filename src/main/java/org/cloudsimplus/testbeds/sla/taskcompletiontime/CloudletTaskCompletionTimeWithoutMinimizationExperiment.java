@@ -106,7 +106,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
     @Override
     protected List<Cloudlet> createCloudlets(final DatacenterBroker broker) {
         final List<Cloudlet> cloudletList = new ArrayList<>(CLOUDLETS);
-        for (int id = cloudletList.size(); id < cloudletList.size() + CLOUDLETS; id++) {
+        for (int i = 0; i < CLOUDLETS; i++) {
             cloudletList.add(createCloudlet(broker));
         }
 
