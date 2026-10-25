@@ -184,7 +184,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         final int pes = VM_CORES[pesId];
         final int mips = VM_MIPS[mipsId];
 
-        final Vm vm = new VmSimple(id, new CoreCapacity(pes, mips))
+        final Vm vm = VmSimple.of(id, new CoreCapacity(pes, mips))
                 .setRam(512).setBw(1000).setSize(10000)
                 .setCloudletScheduler(new CloudletSchedulerTimeShared());
         return vm;

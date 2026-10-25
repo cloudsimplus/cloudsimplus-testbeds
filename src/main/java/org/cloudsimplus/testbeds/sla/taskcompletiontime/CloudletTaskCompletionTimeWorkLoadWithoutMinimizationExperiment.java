@@ -94,7 +94,7 @@ class CloudletTaskCompletionTimeWorkLoadWithoutMinimizationExperiment extends Ab
         final int pesId = (int) (randVm.sample() * VM_CORES.length);
         final int pes = VM_CORES[pesId];
 
-        Vm vm = new VmSimple(id, new CoreCapacity(pes, 1000))
+        Vm vm = VmSimple.of(id, new CoreCapacity(pes, 1000))
             .setRam(512).setBw(1000).setSize(10000)
             .setCloudletScheduler(new CloudletSchedulerCompletelyFair());
         return vm;

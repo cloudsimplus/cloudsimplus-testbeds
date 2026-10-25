@@ -138,7 +138,7 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final int p = (int) (randCloudletPes.sample() * CLOUDLET_CORES.length);
         final long length = CLOUDLET_LENGTHS[i];
         final long pes = CLOUDLET_CORES[p];
-        return new CloudletSimple(nextCloudletId(), length, pes)
+        return CloudletSimple.of(nextCloudletId(), length, pes)
                 .setFileSize(1024)
                 .setOutputSize(1024)
                 .setUtilizationModelBw(model)
@@ -162,7 +162,7 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final int mips = MIPS_VM[mipdsId];
 
 
-        final Vm vm = new VmSimple(id, new CoreCapacity(pes, mips))
+        final Vm vm = VmSimple.of(id, new CoreCapacity(pes, mips))
                 .setRam(512).setBw(1000).setSize(10000)
                 .setCloudletScheduler(new CloudletSchedulerCompletelyFair());
         return vm;

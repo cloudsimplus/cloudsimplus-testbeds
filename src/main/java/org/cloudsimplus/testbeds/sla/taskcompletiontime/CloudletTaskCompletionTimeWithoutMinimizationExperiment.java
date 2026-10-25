@@ -98,7 +98,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         final int pesId = (int) (randVm.sample() * VM_CORES.length);
         final int pes = VM_CORES[pesId];
 
-        final Vm vm = new VmSimple(id, new CoreCapacity(pes, 1000))
+        final Vm vm = VmSimple.of(id, new CoreCapacity(pes, 1000))
             .setRam(512).setBw(1000).setSize(10000)
             .setCloudletScheduler(new CloudletSchedulerTimeShared());
         return vm;
@@ -119,7 +119,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         final int i = (int) (randCloudlet.sample() * CLOUDLET_LENGTHS.length);
         final long length = CLOUDLET_LENGTHS[i];
 
-        return new CloudletSimple(nextCloudletId(), length, 2)
+        return CloudletSimple.of(nextCloudletId(), length, 2)
                 .setFileSize(1024)
                 .setOutputSize(1024)
                 .setUtilizationModel(new UtilizationModelFull());

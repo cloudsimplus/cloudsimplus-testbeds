@@ -273,7 +273,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
 
     public Vm createVm(final DatacenterBroker broker, final int id) {
         final AwsEc2Template template = getTemplate(broker);
-        final Vm vm = new VmSimple(id, new CoreCapacity(template.getCpus(), VM_MIPS));
+        final Vm vm = VmSimple.of(id, new CoreCapacity(template.getCpus(), VM_MIPS));
         vm
             .setRam(template.getMemoryInMB()).setBw(VM_BW).setSize(VM_SIZE)
             .setCloudletScheduler(new CloudletSchedulerTimeShared())
@@ -302,7 +302,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
         final UtilizationModel um = new UtilizationModelDynamic(UtilizationModel.Unit.ABSOLUTE, 50);
 
         final Cloudlet cloudlet
-            = new CloudletSimple(nextCloudletId(), length, CLOUDLET_CORES)
+            = CloudletSimple.of(nextCloudletId(), length, CLOUDLET_CORES)
             .setFileSize(CLOUDLET_FILESIZE)
             .setOutputSize(CLOUDLET_OUTPUTSIZE)
             .setUtilizationModelCpu(new UtilizationModelFull())
@@ -322,7 +322,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     protected Host createHost(final int id) {
         final var cpuCapacity = new CoreCapacity(HOST_CORES, 8000);
 
-        final Host host = new HostSimple(HOST_RAM, HOST_BW, HOST_STORAGE, cpuCapacity)
+        final Host host = HostSimple.of(HOST_RAM, HOST_BW, HOST_STORAGE, cpuCapacity)
             .setRamAllocator(new ResourceAllocatorSimple())
             .setBwAllocator(new ResourceAllocatorSimple())
             .setVmScheduler(new VmSchedulerTimeShared());
@@ -356,7 +356,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /// @return the cloned (new) VM.
     /// @see #createFaultInjectionForHosts(Datacenter)
     private Vm cloneVm(final Vm vm) {
-        final Vm clone = new VmSimple(vm.getProcessor().toCoreCapacity());
+        final Vm clone = VmSimple.of(vm.getProcessor().toCoreCapacity());
         /*
         It' not required to set an ID for the clone.
         It is being set here just to make it easy to
@@ -403,7 +403,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /// @return the cloned (new) cloudlet
     private Cloudlet cloneCloudlet(final Cloudlet source, final long length) {
         final Cloudlet clone
-            = new CloudletSimple(length, (int) source.getRequiredCores());
+            = CloudletSimple.of(length, (int) source.getRequiredCores());
         /*It' not required to set an ID for the clone.
         It is being set here just to make it easy to
         relate the ID of the cloudlet to its clone,
