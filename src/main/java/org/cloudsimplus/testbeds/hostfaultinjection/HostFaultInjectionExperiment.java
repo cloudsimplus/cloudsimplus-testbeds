@@ -39,7 +39,7 @@ import org.cloudsimplus.faultinjection.VmCloner;
 import org.cloudsimplus.faultinjection.VmClonerSimple;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSimple;
-import org.cloudsimplus.provisioners.ResourceProvisionerSimple;
+import org.cloudsimplus.allocators.ResourceAllocatorSimple;
 import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerTimeShared;
 import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
@@ -323,8 +323,8 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
         final var cpuCapacity = new CoreCapacity(HOST_CORES, 8000);
 
         final Host host = new HostSimple(HOST_RAM, HOST_BW, HOST_STORAGE, cpuCapacity)
-            .setRamProvisioner(new ResourceProvisionerSimple())
-            .setBwProvisioner(new ResourceProvisionerSimple())
+            .setRamAllocator(new ResourceAllocatorSimple())
+            .setBwAllocator(new ResourceAllocatorSimple())
             .setVmScheduler(new VmSchedulerTimeShared());
 
         host.setId(id);
