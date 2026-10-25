@@ -30,6 +30,7 @@ import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.distributions.ContinuousDistribution;
 import org.cloudsimplus.distributions.UniformDistr;
 import org.cloudsimplus.listeners.EventInfo;
+import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerTimeShared;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
@@ -94,10 +95,10 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
 
     @Override
     protected Vm createVm(final DatacenterBroker broker, final int id) {
-        final int pesId = (int) (randVm.sample() * VM_PES.length);
-        final int pes = VM_PES[pesId];
+        final int pesId = (int) (randVm.sample() * VM_CORES.length);
+        final int pes = VM_CORES[pesId];
 
-        final Vm vm = new VmSimple(id, 1000, pes)
+        final Vm vm = new VmSimple(id, new CoreCapacity(pes, 1000))
             .setRam(512).setBw(1000).setSize(10000)
             .setCloudletScheduler(new CloudletSchedulerTimeShared());
         return vm;

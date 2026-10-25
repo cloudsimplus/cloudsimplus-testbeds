@@ -4,4 +4,3 @@ t2.medium.json
 t2.large.json
 m4.large.json
 m4.2xlarge.json
-p2.xlarge.json

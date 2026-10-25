@@ -29,6 +29,7 @@ import org.cloudsimplus.builders.tables.TextTableColumn;
 import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.distributions.ContinuousDistribution;
 import org.cloudsimplus.distributions.UniformDistr;
+import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerTimeShared;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
@@ -112,7 +113,7 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         finishedCloudlets.sort(comparingLong(Cloudlet::getId));
 
         new CloudletsTableBuilder(finishedCloudlets)
-            .addColumn(new TextTableColumn("VM    ", "MIPS  "), c -> (long)c.getVm().getMips(), 7)
+            .addColumn(new TextTableColumn("VM    ", "MIPS  "), c -> (long)c.getVm().getProcessor().getMips(), 7)
             .addColumn(new TextTableColumn("Wait Time", "Seconds"), c -> Math.ceil(c.getCreationWaitTime()))
             .build();
     }
@@ -149,14 +150,14 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         taskCompletionTimeSlaContract = getSlaMaxTaskCompletionTime(cl.getBroker());
 
         return execVms.stream()
-            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cl.getPesNumber())
+            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cl.getRequiredCores())
             .filter(vm -> getExpectedCloudletCompletionTime(cl, vm) <= taskCompletionTimeSlaContract)
             .findFirst()
             .orElse(mostFreePesVm);
     }
 
     private double getExpectedCloudletCompletionTime(final Cloudlet cloudlet, final Vm vm) {
-        return cloudlet.getLength() / vm.getMips();
+        return cloudlet.getLength() / vm.getProcessor().getMips();
     }
 
     /// Gets the expected amount of free PEs for a VM
@@ -169,21 +170,21 @@ class CloudletTaskCompletionTimeWorkLoadMinimizationExperiment extends AbstractC
         final long totalPesNumberForCloudletsOfVm
                 = vm.getBroker().getCloudletCreatedList().stream()
                         .filter(c -> c.getVm().equals(vm))
-                        .mapToLong(Cloudlet::getPesNumber)
+                        .mapToLong(Cloudlet::getRequiredCores)
                         .sum();
 
-        return vm.getPesNumber() - totalPesNumberForCloudletsOfVm;
+        return vm.getProcessor().getCores() - totalPesNumberForCloudletsOfVm;
     }
 
     @Override
     protected Vm createVm(final DatacenterBroker broker, final int id) {
-        final int pesId = (int) (randVm.sample() * VM_PES.length);
+        final int pesId = (int) (randVm.sample() * VM_CORES.length);
         final int mipsId = (int) (randMip.sample() * VM_MIPS.length);
 
-        final int pes = VM_PES[pesId];
+        final int pes = VM_CORES[pesId];
         final int mips = VM_MIPS[mipsId];
 
-        final Vm vm = new VmSimple(id, mips, pes)
+        final Vm vm = new VmSimple(id, new CoreCapacity(pes, mips))
                 .setRam(512).setBw(1000).setSize(10000)
                 .setCloudletScheduler(new CloudletSchedulerTimeShared());
         return vm;

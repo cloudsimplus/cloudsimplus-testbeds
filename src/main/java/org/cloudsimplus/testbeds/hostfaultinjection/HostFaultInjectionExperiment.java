@@ -39,10 +39,8 @@ import org.cloudsimplus.faultinjection.VmCloner;
 import org.cloudsimplus.faultinjection.VmClonerSimple;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSimple;
-import org.cloudsimplus.provisioners.PeProvisionerSimple;
 import org.cloudsimplus.provisioners.ResourceProvisionerSimple;
-import org.cloudsimplus.resources.Pe;
-import org.cloudsimplus.resources.PeSimple;
+import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerTimeShared;
 import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
 import org.cloudsimplus.slametrics.SlaContract;
@@ -94,7 +92,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /// The time interval (in seconds) in which [Datacenter] events will be processed.
     private static final int SCHEDULE_TIME_TO_PROCESS_DATACENTER_EVENTS = 300; // (5 seconds * 60 (1 minute))
 
-    private static final int HOST_PES = 4;
+    private static final int HOST_CORES = 4;
     private static final long HOST_RAM = 500000; //host memory (MEGA)
     private static final long HOST_STORAGE = 1000000; //host storage
     private static final long HOST_BW = 100000000L;
@@ -103,7 +101,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     private static final long VM_SIZE = 1000; //image size (MEGA)
     private static final long VM_BW = 100000;
 
-    private static final int CLOUDLET_PES = 2;
+    private static final int CLOUDLET_CORES = 2;
     private static final long CLOUDLET_FILESIZE = 300;
     private static final long CLOUDLET_OUTPUTSIZE = 300;
 
@@ -275,7 +273,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
 
     public Vm createVm(final DatacenterBroker broker, final int id) {
         final AwsEc2Template template = getTemplate(broker);
-        final Vm vm = new VmSimple(id, VM_MIPS, template.getCpus());
+        final Vm vm = new VmSimple(id, new CoreCapacity(template.getCpus(), VM_MIPS));
         vm
             .setRam(template.getMemoryInMB()).setBw(VM_BW).setSize(VM_SIZE)
             .setCloudletScheduler(new CloudletSchedulerTimeShared())
@@ -304,7 +302,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
         final UtilizationModel um = new UtilizationModelDynamic(UtilizationModel.Unit.ABSOLUTE, 50);
 
         final Cloudlet cloudlet
-            = new CloudletSimple(nextCloudletId(), length, CLOUDLET_PES)
+            = new CloudletSimple(nextCloudletId(), length, CLOUDLET_CORES)
             .setFileSize(CLOUDLET_FILESIZE)
             .setOutputSize(CLOUDLET_OUTPUTSIZE)
             .setUtilizationModelCpu(new UtilizationModelFull())
@@ -322,12 +320,9 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
 
     @Override
     protected Host createHost(final int id) {
-        final List<Pe> pesList = new ArrayList<>(HOST_PES);
-        for (int i = 0; i < HOST_PES; i++) {
-            pesList.add(new PeSimple(8000, new PeProvisionerSimple()));
-        }
+        final var cpuCapacity = new CoreCapacity(HOST_CORES, 8000);
 
-        final Host host = new HostSimple(HOST_RAM, HOST_BW, HOST_STORAGE, pesList)
+        final Host host = new HostSimple(HOST_RAM, HOST_BW, HOST_STORAGE, cpuCapacity)
             .setRamProvisioner(new ResourceProvisionerSimple())
             .setBwProvisioner(new ResourceProvisionerSimple())
             .setVmScheduler(new VmSchedulerTimeShared());
@@ -361,7 +356,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /// @return the cloned (new) VM.
     /// @see #createFaultInjectionForHosts(Datacenter)
     private Vm cloneVm(final Vm vm) {
-        final Vm clone = new VmSimple(vm.getMips(), (int) vm.getPesNumber());
+        final Vm clone = new VmSimple(vm.getProcessor().toCoreCapacity());
         /*
         It' not required to set an ID for the clone.
         It is being set here just to make it easy to
@@ -377,7 +372,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
             .setRam(vm.getBw().getCapacity())
             .setCloudletScheduler(new CloudletSchedulerTimeShared());
         System.out.printf("%n%n#Cloning VM %d from Host %d%n\tMips %.2f Number of Pes: %d%n",
-            vm.getId(), vm.getHost().getId(), clone.getMips(), clone.getPesNumber());
+            vm.getId(), vm.getHost().getId(), clone.getProcessor().getMips(), clone.getProcessor().getCores());
 
         return clone;
     }
@@ -408,7 +403,7 @@ final class HostFaultInjectionExperiment extends Experiment<HostFaultInjectionEx
     /// @return the cloned (new) cloudlet
     private Cloudlet cloneCloudlet(final Cloudlet source, final long length) {
         final Cloudlet clone
-            = new CloudletSimple(length, (int) source.getPesNumber());
+            = new CloudletSimple(length, (int) source.getRequiredCores());
         /*It' not required to set an ID for the clone.
         It is being set here just to make it easy to
         relate the ID of the cloudlet to its clone,
