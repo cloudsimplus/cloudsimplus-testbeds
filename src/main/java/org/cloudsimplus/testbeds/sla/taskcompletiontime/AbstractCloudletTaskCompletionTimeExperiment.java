@@ -108,7 +108,7 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
 
         final var cpuCapacity = new CoreCapacity(HOST_CORES, 100000);
 
-        final Host host = new HostSimple(40960, 10000000, 10000000, cpuCapacity)
+        final Host host = HostSimple.of(40960, 10000000, 10000000, cpuCapacity)
             .setRamAllocator(new ResourceAllocatorSimple())
             .setBwAllocator(new ResourceAllocatorSimple())
             .setVmScheduler(new VmSchedulerTimeShared());
