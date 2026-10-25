@@ -30,7 +30,7 @@ import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.resources.Processor;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSimple;
-import org.cloudsimplus.provisioners.ResourceProvisionerSimple;
+import org.cloudsimplus.allocators.ResourceAllocatorSimple;
 import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
 import org.cloudsimplus.testbeds.Experiment;
@@ -109,8 +109,8 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
         final var cpuCapacity = new CoreCapacity(HOST_CORES, 100000);
 
         final Host host = new HostSimple(40960, 10000000, 10000000, cpuCapacity)
-            .setRamProvisioner(new ResourceProvisionerSimple())
-            .setBwProvisioner(new ResourceProvisionerSimple())
+            .setRamAllocator(new ResourceAllocatorSimple())
+            .setBwAllocator(new ResourceAllocatorSimple())
             .setVmScheduler(new VmSchedulerTimeShared());
         host.setId(id);
         return host;
