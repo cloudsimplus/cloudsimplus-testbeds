@@ -29,6 +29,7 @@ import org.cloudsimplus.cloudlets.CloudletSimple;
 import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.distributions.ContinuousDistribution;
 import org.cloudsimplus.distributions.UniformDistr;
+import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerCompletelyFair;
 import org.cloudsimplus.slametrics.SlaContract;
 import org.cloudsimplus.testbeds.ExperimentRunner;
@@ -134,9 +135,9 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
     protected Cloudlet createCloudlet(final DatacenterBroker broker) {
         final UtilizationModel model = new UtilizationModelDynamic(0.1);
         final int i = (int) (randCloudlet.sample() * CLOUDLET_LENGTHS.length);
-        final int p = (int) (randCloudletPes.sample() * CLOUDLET_PES.length);
+        final int p = (int) (randCloudletPes.sample() * CLOUDLET_CORES.length);
         final long length = CLOUDLET_LENGTHS[i];
-        final long pes = CLOUDLET_PES[p];
+        final long pes = CLOUDLET_CORES[p];
         return new CloudletSimple(nextCloudletId(), length, pes)
                 .setFileSize(1024)
                 .setOutputSize(1024)
@@ -154,14 +155,14 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
 
     @Override
     protected Vm createVm(final DatacenterBroker broker, final int id) {
-        final int pesId = (int) (randVm.sample() * VM_PES.length);
+        final int pesId = (int) (randVm.sample() * VM_CORES.length);
         final int mipdsId = (int) (randMipsVm.sample() * MIPS_VM.length);
 
-        final int pes = VM_PES[pesId];
+        final int pes = VM_CORES[pesId];
         final int mips = MIPS_VM[mipdsId];
 
 
-        final Vm vm = new VmSimple(id, mips, pes)
+        final Vm vm = new VmSimple(id, new CoreCapacity(pes, mips))
                 .setRam(512).setBw(1000).setSize(10000)
                 .setCloudletScheduler(new CloudletSchedulerCompletelyFair());
         return vm;
@@ -194,7 +195,7 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final double taskCompletionTimeSlaContract = getTaskCompletionTimeFromContract(cloudlet.getBroker());
 
         return execVms.stream()
-            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cloudlet.getPesNumber())
+            .filter(vm -> getExpectedNumberOfFreeVmPes(vm) >= cloudlet.getRequiredCores())
             .filter(vm -> getExpectedCloudletCompletionTime(cloudlet, vm) <= taskCompletionTimeSlaContract)
             .findFirst()
             .orElse(mostFreePesVm);
@@ -210,20 +211,20 @@ final class CloudletTaskCompletionTimeMinimizationExperiment extends AbstractClo
         final long totalPesForCloudletsOfVm
             = vm.getBroker().getCloudletCreatedList().stream()
             .filter(c -> c.getVm().equals(vm))
-            .mapToLong(Cloudlet::getPesNumber)
+            .mapToLong(Cloudlet::getRequiredCores)
             .sum();
 
-        final long numberOfVmFreePes = vm.getPesNumber() - totalPesForCloudletsOfVm;
+        final long numberOfVmFreePes = vm.getProcessor().getCores() - totalPesForCloudletsOfVm;
 
         System.out.printf(
             "\t\tTotal PEs of Cloudlets in %s: %d -> VM PEs: %d -> VM free PEs: %d",
-            vm, totalPesForCloudletsOfVm, vm.getPesNumber(), numberOfVmFreePes);
+            vm, totalPesForCloudletsOfVm, vm.getProcessor().getCores(), numberOfVmFreePes);
 
         return numberOfVmFreePes;
     }
 
     private double getExpectedCloudletCompletionTime(final Cloudlet cloudlet, final Vm vm) {
-        return cloudlet.getLength() / vm.getMips();
+        return cloudlet.getLength() / vm.getProcessor().getMips();
     }
 
     /// Gets the Task Completion Time (TCT) defined in a [DatacenterBroker]'s [SlaContract].

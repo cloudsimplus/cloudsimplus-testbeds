@@ -27,19 +27,16 @@ import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.DatacenterBrokerSimple;
 import org.cloudsimplus.builders.tables.CloudletsTableBuilder;
 import org.cloudsimplus.cloudlets.Cloudlet;
-import org.cloudsimplus.core.Machine;
+import org.cloudsimplus.resources.Processor;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSimple;
-import org.cloudsimplus.provisioners.PeProvisionerSimple;
 import org.cloudsimplus.provisioners.ResourceProvisionerSimple;
-import org.cloudsimplus.resources.Pe;
-import org.cloudsimplus.resources.PeSimple;
+import org.cloudsimplus.resources.CoreCapacity;
 import org.cloudsimplus.schedulers.vm.VmSchedulerTimeShared;
 import org.cloudsimplus.testbeds.Experiment;
 import org.cloudsimplus.testbeds.ExperimentRunner;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,7 +46,7 @@ import static org.cloudsimplus.testbeds.sla.taskcompletiontime.CloudletTaskCompl
 /// @param <T> the type of the subclass extending this class
 abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment<T>> extends Experiment<T> {
     private static final int HOSTS = 50;
-    private static final int HOST_PES = 32;
+    private static final int HOST_CORES = 32;
 
     protected AbstractCloudletTaskCompletionTimeExperiment(final int index, @Nullable final ExperimentRunner runner, final long seed) {
         super(index, runner, seed);
@@ -74,13 +71,13 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
     /// @return
     protected final double getSumPesVms() {
         return getVmList().stream()
-            .mapToDouble(Machine::getPesNumber)
+            .mapToDouble(Processor::cores)
             .sum();
     }
 
     protected final double getSumPesCloudlets() {
         return getCloudletList().stream()
-            .mapToDouble(Cloudlet::getPesNumber)
+            .mapToDouble(Cloudlet::getRequiredCores)
             .sum();
     }
 
@@ -108,13 +105,10 @@ abstract class AbstractCloudletTaskCompletionTimeExperiment<T extends Experiment
     }
 
     protected final Host createHost(final int id) {
-        final List<Pe> pesList = new ArrayList<>(HOST_PES);
 
-        for (int i = 0; i < HOST_PES; i++) {
-            pesList.add(new PeSimple(100000, new PeProvisionerSimple()));
-        }
+        final var cpuCapacity = new CoreCapacity(HOST_CORES, 100000);
 
-        final Host host = new HostSimple(40960, 10000000, 10000000, pesList)
+        final Host host = new HostSimple(40960, 10000000, 10000000, cpuCapacity)
             .setRamProvisioner(new ResourceProvisionerSimple())
             .setBwProvisioner(new ResourceProvisionerSimple())
             .setVmScheduler(new VmSchedulerTimeShared());

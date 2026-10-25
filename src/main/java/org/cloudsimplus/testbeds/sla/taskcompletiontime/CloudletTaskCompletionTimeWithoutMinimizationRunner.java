@@ -35,7 +35,7 @@ public class CloudletTaskCompletionTimeWithoutMinimizationRunner extends Experim
     static final long[] CLOUDLET_LENGTHS = {10000, 14000, 20000, 40000};
     static final int CLOUDLETS = 90;
     public static final int VMS = 30;
-    public static final int[] VM_PES = {2, 4};
+    public static final int[] VM_CORES = {2, 4};
 
     /// Indicates if each experiment will output execution logs or not.
     private final boolean experimentVerbose = false;
