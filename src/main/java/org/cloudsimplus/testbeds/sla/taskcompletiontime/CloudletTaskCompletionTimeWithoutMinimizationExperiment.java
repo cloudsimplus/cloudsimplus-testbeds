@@ -70,7 +70,7 @@ class CloudletTaskCompletionTimeWithoutMinimizationExperiment extends AbstractCl
         randCloudlet = new UniformDistr(getSeed());
         randVm = new UniformDistr(getSeed()+1);
         this.contract = SlaContract.getInstance(METRICS_FILE);
-        getSimulation().addOnClockTickListener(this::printVmsCpuUsage);
+        getSimulation().listeners().addOnClockTick(this::printVmsCpuUsage);
     }
 
     @Override
